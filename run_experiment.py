@@ -18,12 +18,11 @@ from data import build_dataset
 from model import (ContrastiveMaxDenseHead,
                    ContrastiveMeanDenseHead, 
                    ContrastiveLSTMHead,
-                   )
-from model_experimental import (ContrastiveTransformer,
-                                ContrastiveLSTMTransformer,
-                                ContrastiveMeanDenseTransformer,
-                                ContrastiveMaxDenseTransformer,
-                                )
+                   ContrastiveTransformer,
+                   #ContrastiveLSTMTransformer,
+                   ContrastiveMeanTransformer,
+                   ContrastiveMaxTransformer,
+                  )
 
 ###############################################################################
 # Runtime parameters ##########################################################
@@ -55,9 +54,9 @@ DEVICES = args.devices
 MODEL_TYPE = args.model
 BASE_CODE = args.transformer
 if MODEL_TYPE == 'max':
-    MODEL = ContrastiveMaxDenseTransformer
+    MODEL = ContrastiveMaxTransformer
 elif MODEL_TYPE == 'mean':
-    MODEL = ContrastiveMeanDenseTransformer
+    MODEL = ContrastiveMeanTransformer
 elif MODEL_TYPE == 'lstm':
     MODEL = ContrastiveLSTMTransformer
 elif MODEL_TYPE == 'experimental':
@@ -65,17 +64,17 @@ elif MODEL_TYPE == 'experimental':
 elif MODEL_TYPE == 'experimental_lstm':
     MODEL = ContrastiveLSTMTransformer
 
-TRAIN_FILES = {'books': 'local_data/book_train.csv',
+TRAIN_FILES = {#'books': 'local_data/book_train.csv',
                'mails': 'local_data/mail_train.csv',
                'blogs': 'local_data/blog_train.csv',
                 }
-TEST_FILES = {'books': 'local_data/book_test.csv',
+TEST_FILES = {#'books': 'local_data/book_test.csv',
               'mails': 'local_data/mail_test.csv',
               'blogs': 'local_data/blog_test.csv',
                 }
 USED_FILES = []
-if args.books:
-    USED_FILES.append('books')
+#if args.books:
+#    USED_FILES.append('books')
 if args.mails:
     USED_FILES.append('mails')
 if args.blogs:
@@ -154,7 +153,7 @@ def main():
     checkpoint_callback = ModelCheckpoint('model',
                                           filename=save_name,
                                           monitor=None,
-                                          every_n_val_epochs=1,
+                                          #every_n_val_epochs=1,
                                           )
     lr_monitor = LearningRateMonitor('step')
 
@@ -163,7 +162,7 @@ def main():
                     max_steps=TRAINING_STEPS,
                     accelerator='gpu',
                     log_every_n_steps=1,
-                    flush_logs_every_n_steps=500,
+                    #flush_logs_every_n_steps=500,
                     logger=wandb_logger,
                     #strategy='dp',
                     precision=16,
